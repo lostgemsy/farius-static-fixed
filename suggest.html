@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/transition.js" defer></script>
+<link rel="icon" type="image/png" href="png/logo.png">
+<title>Suggest a game — Farius</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f7f7f7;
+  color: #111;
+  background-image:
+    radial-gradient(circle at 25% 15%, rgba(0,0,0,0.015) 0%, transparent 50%),
+    radial-gradient(circle at 75% 85%, rgba(0,0,0,0.015) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23e0e0e0' stroke-width='1.2'%3E%3Cpath d='M0 0h120v120H0z'/%3E%3Cpath d='M60 0v120M0 60h120'/%3E%3Ccircle cx='60' cy='60' r='20'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 120px 120px;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+.top-nav { display: flex; align-items: center; gap: 6px; padding: 18px 28px; flex-wrap: wrap; }
+.top-nav .brand { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; margin-right: auto; }
+.nav-item { padding: 8px 14px; border-radius: 10px; color: #555; text-decoration: none; font-weight: 600; font-size: 14px; }
+.nav-item:hover { background: #ececec; color: #111; }
+.nav-item[aria-current="page"] { background: #111; color: #fff; }
+
+main { flex: 1; display: flex; justify-content: center; padding: 20px 20px 60px; }
+.panel { width: 100%; max-width: 480px; }
+.panel h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+.panel > p { color: #777; font-size: 14px; margin-bottom: 22px; }
+
+form { display: flex; flex-direction: column; gap: 12px; background: #fff; border: 2px solid #ececec; border-radius: 16px; padding: 22px; }
+label { font-size: 12.5px; font-weight: 700; color: #555; margin-bottom: -6px; }
+input, textarea, select {
+  border: 2px solid #e6e6e6; border-radius: 10px; padding: 11px 13px;
+  font-family: inherit; font-size: 14px; background: #fafafa; color: #111;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+input:focus, textarea:focus, select:focus { outline: none; border-color: #111; background: #fff; }
+textarea { resize: vertical; min-height: 70px; }
+
+button[type="submit"] {
+  margin-top: 6px; border: 2px solid #111; background: #111; color: #fff;
+  font-weight: 700; font-size: 15px; border-radius: 10px; padding: 12px; cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+button[type="submit"]:hover { background: #000; }
+button[type="submit"]:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.status-msg { font-size: 13.5px; border-radius: 10px; padding: 11px 13px; display: none; }
+.status-msg.show { display: block; }
+.status-msg.error { background: #fdecec; color: #b3261e; }
+.status-msg.success { background: #eafaf0; color: #1e7a3d; }
+.status-msg.warn { background: #fff6e5; color: #8a5a00; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav" aria-label="Main navigation">
+  <a href="index.html" class="brand">Farius</a>
+  <a href="index.html" class="nav-item">Home</a>
+  <a href="games.html" class="nav-item">Games</a>
+  <a href="chat.html" class="nav-item">Chat</a>
+  <a href="suggest.html" class="nav-item" aria-current="page">Suggest</a>
+</nav>
+
+<main>
+  <div class="panel">
+    <h1>Suggest a game</h1>
+    <p>Know something that should be added to the library? Send it in for review.</p>
+
+    <div id="statusBanner" class="status-msg"></div>
+
+    <form id="suggestForm">
+      <label for="gameName">Game name</label>
+      <input id="gameName" name="gameName" type="text" maxlength="60" required>
+
+      <label for="gameLink">Link to the game</label>
+      <input id="gameLink" name="gameLink" type="url" placeholder="https://…" required>
+
+      <label for="gameCategory">Category</label>
+      <select id="gameCategory" name="gameCategory" required>
+        <option value="" disabled selected>Choose a category…</option>
+        <option>Action</option>
+        <option>Adventure</option>
+        <option>Puzzle</option>
+        <option>Racing</option>
+        <option>Sports</option>
+        <option>Idle / Clicker</option>
+        <option>Shooter</option>
+        <option>Other</option>
+      </select>
+
+      <label for="gameDescription">Description (optional)</label>
+      <textarea id="gameDescription" name="gameDescription" maxlength="300"></textarea>
+
+      <label for="yourName">Your name (optional)</label>
+      <input id="yourName" name="yourName" type="text" maxlength="24" placeholder="Anonymous">
+
+      <button type="submit" id="submitBtn">Submit suggestion</button>
+    </form>
+  </div>
+</main>
+
+<script>
+  const form = document.getElementById("suggestForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const banner = document.getElementById("statusBanner");
+
+  function showBanner(text, kind) {
+    banner.textContent = text;
+    banner.className = "status-msg show " + kind;
+  }
+  function hideBanner() {
+    banner.className = "status-msg";
+  }
+
+  async function checkStatus() {
+    try {
+      const res = await fetch("/api/suggest/status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ yourName: localStorage.getItem("farius_suggest_name") || "" }),
+      });
+      const data = await res.json();
+      if (data.banned) {
+        showBanner(`You're banned from suggesting games: ${data.banReason || "no reason given"}.`, "error");
+        submitBtn.disabled = true;
+      } else if (data.muted) {
+        showBanner(`You're muted: ${data.muteReason || "no reason given"}.`, "error");
+        submitBtn.disabled = true;
+      } else if (data.cooldownSeconds > 0) {
+        showBanner(`You can suggest again in about ${Math.ceil(data.cooldownSeconds / 60)} minute(s).`, "warn");
+      }
+    } catch (err) {
+      // Backend unreachable — let them try submitting anyway, the server will say why if it fails.
+    }
+  }
+
+  async function checkWarnings() {
+    try {
+      const res = await fetch("/api/suggest/warnings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ yourName: localStorage.getItem("farius_suggest_name") || "" }),
+      });
+      const data = await res.json();
+      if (data.warnings && data.warnings.length) {
+        showBanner(`Admin warning: ${data.warnings[data.warnings.length - 1].message}`, "warn");
+      }
+    } catch (err) {}
+  }
+
+  checkStatus();
+  checkWarnings();
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    hideBanner();
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting…";
+
+    const payload = {
+      gameName: form.gameName.value.trim(),
+      gameLink: form.gameLink.value.trim(),
+      gameCategory: form.gameCategory.value,
+      gameDescription: form.gameDescription.value.trim(),
+      yourName: form.yourName.value.trim() || "Anonymous",
+    };
+    localStorage.setItem("farius_suggest_name", payload.yourName);
+
+    try {
+      const res = await fetch("/api/suggest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showBanner(data.error || "Something went wrong.", "error");
+        submitBtn.disabled = false;
+      } else {
+        showBanner("Thanks! Your suggestion was sent for review.", "success");
+        form.reset();
+        submitBtn.disabled = false;
+      }
+    } catch (err) {
+      showBanner("Couldn't reach the server. Try again in a moment.", "error");
+      submitBtn.disabled = false;
+    }
+    submitBtn.textContent = "Submit suggestion";
+  });
+</script>
+
+</body>
+</html>

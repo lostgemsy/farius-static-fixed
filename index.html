@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/transition.js" defer></script>
+<link rel="icon" type="image/png" href="png/logo.png">
+<title>Farius</title>
+<meta name="description" content="Farius — games, chat and more. Made by HOHOGAMES.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; min-height: 100%; }
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f7f7f7;
+  color: #111;
+  background-image:
+    radial-gradient(circle at 25% 15%, rgba(0,0,0,0.015) 0%, transparent 50%),
+    radial-gradient(circle at 75% 85%, rgba(0,0,0,0.015) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23e0e0e0' stroke-width='1.2'%3E%3Cpath d='M0 0h120v120H0z'/%3E%3Cpath d='M60 0v120M0 60h120'/%3E%3Ccircle cx='60' cy='60' r='20'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 120px 120px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- top nav ---------- */
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 28px;
+  flex-wrap: wrap;
+}
+.top-nav .brand {
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  margin-right: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.top-nav .brand small {
+  font-weight: 500;
+  font-size: 11px;
+  color: #999;
+}
+.nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  color: #555;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.nav-item img { width: 15px; height: 15px; opacity: 0.7; }
+.nav-item:hover { background: #ececec; color: #111; }
+.nav-item[aria-current="page"] { background: #111; color: #fff; }
+.nav-item[aria-current="page"] img { filter: invert(1); opacity: 1; }
+
+/* ---------- hero ---------- */
+main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+.hero { max-width: 640px; text-align: center; }
+.hero h1 {
+  font-size: clamp(34px, 6vw, 54px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 14px;
+}
+.hero p { color: #666; font-size: 16px; line-height: 1.6; margin-bottom: 34px; }
+
+.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 46px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 26px; border-radius: 12px;
+  font-weight: 700; font-size: 15px; text-decoration: none;
+  border: 2px solid #111;
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: #111; color: #fff; }
+.btn-primary:hover { background: #000; }
+.btn-secondary { background: transparent; color: #111; }
+.btn-secondary:hover { background: #111; color: #fff; }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  text-align: left;
+}
+.mini-card {
+  background: #fff;
+  border: 2px solid #ececec;
+  border-radius: 14px;
+  padding: 18px;
+  text-decoration: none;
+  color: #111;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+.mini-card:hover { border-color: #111; transform: translateY(-2px); }
+.mini-card .icon { font-size: 22px; margin-bottom: 10px; display: block; }
+.mini-card .title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.mini-card .desc { font-size: 12.5px; color: #888; line-height: 1.4; }
+
+footer {
+  text-align: center; color: #999; font-size: 12px;
+  padding: 20px; letter-spacing: 0.02em;
+}
+footer a { color: #666; text-decoration: none; font-weight: 600; }
+footer a:hover { color: #111; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav" aria-label="Main navigation">
+  <a href="index.html" class="brand" data-no-transition>
+    Farius <small>Made by HOHOGAMES</small>
+  </a>
+  <a href="index.html" class="nav-item" aria-current="page">
+    <img src="png/house-solid.svg" alt="" onerror="this.style.display='none'"> Home
+  </a>
+  <a href="games.html" class="nav-item">
+    <img src="png/gamepad-solid.svg" alt="" onerror="this.style.display='none'"> Games
+  </a>
+  <a href="chat.html" class="nav-item">
+    <img src="png/comment-solid.svg" alt="" onerror="this.style.display='none'"> Chat
+  </a>
+  <a href="suggest.html" class="nav-item">
+    <img src="suggest.png" alt="" onerror="this.style.display='none'"> Suggest
+  </a>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>Farius</h1>
+    <p>A game library, live chat, and community leaderboard in one place — made by HOHOGAMES.</p>
+
+    <div class="cta-row">
+      <a href="games.html" class="btn btn-primary">Browse games</a>
+      <a href="chat.html" class="btn btn-secondary">Open chat</a>
+    </div>
+
+    <div class="card-grid">
+      <a href="games.html" class="mini-card">
+        <span class="icon">🎮</span>
+        <div class="title">Games</div>
+        <div class="desc">Browse the whole library by category and search.</div>
+      </a>
+      <a href="chat.html" class="mini-card">
+        <span class="icon">💬</span>
+        <div class="title">Chat</div>
+        <div class="desc">Live chat with friends, stickers, and replies.</div>
+      </a>
+      <a href="suggest.html" class="mini-card">
+        <span class="icon">➕</span>
+        <div class="title">Suggest a game</div>
+        <div class="desc">Know a game that should be added? Send it in.</div>
+      </a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Farius — made by HOHOGAMES
+</footer>
+
+</body>
+</html>

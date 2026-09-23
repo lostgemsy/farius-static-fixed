@@ -1,0 +1,5 @@
+const list=document.querySelector("#games"), player=document.querySelector("#player"), frame=document.querySelector("#gameFrame");
+async function loadGames(){const games=await fetch("/api/games").then(r=>r.json());list.innerHTML=games.length?games.map(g=>`<button class="game" data-url="${g.url}"><h3>${g.name}</h3><span class="muted">Play</span></button>`).join(""):'<div class="card">No games installed yet. Put .html games in public/games/.</div>';document.querySelectorAll(".game").forEach(b=>b.onclick=()=>{frame.src=b.dataset.url;player.classList.remove("hidden");list.classList.add("hidden");});}
+document.querySelector("#closeGame")?.addEventListener("click",()=>{frame.src="about:blank";player.classList.add("hidden");list.classList.remove("hidden")});loadGames();
+export async function submitScore(game,score){const token=localStorage.getItem("fariusToken");if(!token)return false;const r=await fetch("/api/leaderboard/score",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+token},body:JSON.stringify({game,score})});return r.ok;}
+window.FariusGames={submitScore};

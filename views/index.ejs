@@ -1,0 +1,18 @@
+<%- include('parts/topbar') %>
+<main class="page">
+<section class="hero">
+<div class="pill">Farius • powered by Node + Socket.IO</div>
+<h1>Search The Web Freely</h1>
+<p>Proxy browsing, games, real-time chat, friends, suggestions and leaderboards in one app.</p>
+<form class="search" id="proxySearch"><input id="searchInput" placeholder="Search the web with DuckDuckGo..." autocomplete="off"><button>Search</button></form>
+<div class="cards">
+<a class="card" href="/games"><h3>🎮 Games</h3><p class="muted">Launch your connected game library without leaving Farius.</p></a>
+<a class="card" href="/leaderboard"><h3>🏆 Leaderboard</h3><p class="muted">Scores submitted by signed-in players.</p></a>
+<button class="card" id="openChatCard" style="text-align:left;color:white;border:1px solid var(--line);cursor:pointer"><h3>💬 Chat</h3><p class="muted">Global chat, DMs and friend requests with Socket.IO.</p></button>
+<a class="card" href="/suggest"><h3>💡 Suggestions</h3><p class="muted">Send ideas for features, games and improvements.</p></a>
+</div>
+</section>
+</main>
+<div id="chatModal" class="modal"><div class="modal-box chat-window"><button class="close" id="closeChat">✕</button><h2>Farius Chat</h2><div id="authNotice" class="muted">Sign in to chat.</div><div class="tabs"><button class="primary" id="globalTab">Global</button><button id="friendTab">Friends</button></div><div id="messages" class="messages"></div><div class="chat-compose"><input id="chatInput" placeholder="Type a message..." maxlength="1000"><button class="primary" id="sendChat">Send</button></div><div style="margin-top:10px"><button id="stickerToggle">😊 Stickers</button><div id="stickers" class="cards hidden" style="grid-template-columns:repeat(6,1fr);margin-top:8px"></div></div></div></div>
+<div id="authModal" class="modal"><div class="modal-box"><button class="close" id="closeAuth">✕</button><h2 id="authTitle">Sign in</h2><div class="field"><label>Username</label><input id="authUser" maxlength="24"></div><div class="field"><label>Password</label><input id="authPass" type="password" minlength="6"></div><button class="primary" id="authSubmit">Sign in</button><button id="switchAuth" style="margin-left:8px">Create account</button><p id="authError" class="muted"></p></div></div>
+<script src="/socket.io/socket.io.js"></script><script type="module" src="/js/app.js"></script>
